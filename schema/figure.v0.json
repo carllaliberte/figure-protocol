@@ -19,6 +19,8 @@
     },
     "interdits": { "type": "array", "items": { "type": "string" } },
     "identite_sha256": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
+    "temoin_id": { "type": ["string", "null"] },
+    "transcript_sha256": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
     "debut": { "type": ["string", "null"] },
     "fin": { "type": "string" },
     "revocable": { "const": true },
