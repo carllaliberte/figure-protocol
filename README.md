@@ -48,8 +48,10 @@ Sans date de fin : refus. Mineur : refus. Fichier biométrique dans Git : refus.
 | [SITUS](https://github.com/carllaliberte/situs-protocol) | où |
 | [UNFORGE](https://github.com/carllaliberte/unforge-check) | quoi |
 | [QUELLE](https://github.com/carllaliberte/quelle) | d'où le bit |
+| [TÉMOIN](https://github.com/carllaliberte/temoin-protocol) | avec quelle force |
+| [HORIZON](https://github.com/carllaliberte/horizon-protocol) | jusqu'à quand le sceau tient |
 
-QUANTUM signe. Ce repo écrit et lit. Les clés restent hors Git.
+MIT (protocoles) · Apache-2.0 (œil UNFORGE). QUANTUM signe. Les clés restent hors Git.
 
 ## Fichiers
 
