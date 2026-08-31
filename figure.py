@@ -22,15 +22,7 @@ def _parse_jour(s: str) -> date:
     return date.fromisoformat(s)
 
 
-def ecrire(
-    nom_public: str,
-    usages: list[str],
-    fin: str,
-    debut: str | None = None,
-    juridiction: str = "QC",
-    langue: str = "fr-CA",
-    majeur: bool = True,
-) -> dict:
+def ecrire(nom_public, usages, fin, debut=None, juridiction="QC", langue="fr-CA", majeur=True, temoin_id=None, transcript_sha256=None):
     if not majeur:
         raise SystemExit("refus : figure d'un mineur")
     if not nom_public.strip():
@@ -47,7 +39,7 @@ def ecrire(
     if jour_fin <= _aujourd_hui():
         raise SystemExit("fin doit être après aujourd'hui")
     jour_debut = _parse_jour(debut) if debut else _aujourd_hui()
-    carte = {
+    return {
         "format": FORMAT,
         "figure_id": "FG-" + uuid.uuid4().hex[:12],
         "nom_public": nom_public.strip(),
@@ -57,17 +49,17 @@ def ecrire(
         "usages": usages,
         "interdits": ["mineur", "mandat sans fin", "fichier biométrique dans Git"],
         "identite_sha256": None,
+        "temoin_id": temoin_id or None,
+        "transcript_sha256": transcript_sha256 or None,
         "debut": jour_debut.isoformat(),
         "fin": jour_fin.isoformat(),
         "revocable": True,
         "note": "v0 non signée. QUANTUM signe plus tard. Hash seulement dans Git.",
     }
-    return carte
 
 
 def lire(chemin: str) -> dict:
-    p = Path(chemin).expanduser()
-    carte = json.loads(p.read_text(encoding="utf-8"))
+    carte = json.loads(Path(chemin).expanduser().read_text(encoding="utf-8"))
     if carte.get("format") != FORMAT:
         raise SystemExit("pas une carte figure.v0")
     if carte.get("majeur") is not True:
@@ -91,9 +83,11 @@ def main(argv=None) -> int:
     sub = p.add_subparsers(dest="cmd", required=True)
     pe = sub.add_parser("ecrire")
     pe.add_argument("--nom-public", required=True)
-    pe.add_argument("--usages", required=True, help="nom,voix,visage,mandat")
-    pe.add_argument("--fin", required=True, help="YYYY-MM-DD")
+    pe.add_argument("--usages", required=True)
+    pe.add_argument("--fin", required=True)
     pe.add_argument("--debut", default=None)
+    pe.add_argument("--temoin-id", default=None)
+    pe.add_argument("--transcript-sha256", default=None)
     pe.add_argument("--juridiction", default="QC")
     pe.add_argument("--langue", default="fr-CA")
     pe.add_argument("--vers", default="carte.figure.json")
@@ -102,20 +96,9 @@ def main(argv=None) -> int:
     args = p.parse_args(argv)
     if args.cmd == "ecrire":
         usages = [u.strip() for u in args.usages.split(",") if u.strip()]
-        carte = ecrire(
-            args.nom_public,
-            usages,
-            args.fin,
-            debut=args.debut,
-            juridiction=args.juridiction,
-            langue=args.langue,
-        )
-        Path(args.vers).write_text(
-            json.dumps(carte, ensure_ascii=False, indent=2) + "\n",
-            encoding="utf-8",
-        )
-        out = dict(carte)
-        out["fichier"] = args.vers
+        carte = ecrire(args.nom_public, usages, args.fin, args.debut, args.juridiction, args.langue, True, args.temoin_id, args.transcript_sha256)
+        Path(args.vers).write_text(json.dumps(carte, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        out = dict(carte); out["fichier"] = args.vers
         print(json.dumps(out, ensure_ascii=False, indent=2))
     else:
         print(json.dumps(lire(args.fichier), ensure_ascii=False, indent=2))
