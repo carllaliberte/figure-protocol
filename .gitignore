@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+*.voix
+*.wav
+*.mp3
+*.png
+*.jpg
+*.jpeg
+*.webp
+owner.txt
+consentement.txt
