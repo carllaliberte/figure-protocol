@@ -2,7 +2,10 @@
 
 FIGURE exige date de fin et refuse le mineur. Cette rail nomme la personne. Elle ne juge pas les quatre.
 
-Contrat : https://github.com/carllaliberte/famille/blob/main/schema/juge.v0.json
-CLI : `python -m quantum peut-dire --fichier carte.json` — exit 0 | 2
+CLI local : `python3 figure.py juger` — figure active → allow. Cette rail nomme qui.
 
-Cette rail nomme qui. Elle ne collapse pas MODE.
+Contrat : https://github.com/carllaliberte/famille/blob/main/schema/juge.v0.json
+CLI famille : `python -m quantum peut-dire --fichier carte.json` — exit 0 | 2
+
+Cette rail nomme qui. Elle ne collapse pas MODE. Elle ne frappe pas `quantique`.
+
