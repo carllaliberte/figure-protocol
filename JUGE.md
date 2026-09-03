@@ -2,7 +2,7 @@
 
 FIGURE exige date de fin et refuse le mineur. Cette rail nomme la personne. Elle ne juge pas les quatre.
 
-CLI local : `python3 figure.py juger` — figure active → allow. Cette rail nomme qui.
+CLI local : `python3 figure.py juger` — figure active → allow. `fin` today or past → deny. Servitude ended. Person is not fake. Speak of, not as. Cette rail nomme qui.
 
 Contrat : https://github.com/carllaliberte/famille/blob/main/schema/juge.v0.json
 CLI famille : `python -m quantum peut-dire --fichier carte.json` — exit 0 | 2

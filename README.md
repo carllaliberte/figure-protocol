@@ -35,7 +35,9 @@ Quatre usages, séparés. This rail does not collapse them.
 
 - FIGURE is a servitude on a person: name, voice, face, or mandate. Active figure → speak as X. Absent figure → speak of X, never as X.
 - Four usages, kept separate: `nom` | `voix` | `visage` | `mandat`.
-- Missing `fin` (`YYYY-MM-DD`): refuse. Past or today at write: refuse. The date is a UTC calendar day.
+- Missing `fin` (`YYYY-MM-DD`): refuse. Past or today at write: refuse. The date is a UTC calendar day. The named day is already too late.
+- Expire is a judge decision, not a parse error. `lire` of an expired card succeeds — it is still a figure.v0 card.
+- `juger` deny when `fin` is today or past: servitude ended. Person is not fake. Speak of, not as.
 - Minor: refuse. `majeur` must be true. `lire` refuses `majeur ≠ true`. Never write a minor figure.
 - Usage `mandat` without an end date: refuse.
 - Never put a biometric file (voice / face / ID) in Git — hash only. `identite_sha256` stays null in v0 examples.
@@ -54,7 +56,8 @@ python3 figure.py juger examples/fictive-adulte.figure.json
 ```
 
 Sans date de fin : refus. Mineur : refus. Fichier biométrique dans Git : refus.
-The calendar day is UTC.
+The calendar day is UTC. Named day already too late at write.
+A judge `deny` does not say the person is fake. It says: servitude ended. Person is not fake. Speak of, not as.
 
 Physics locks (stdlib, no extra packages):
 
@@ -70,6 +73,8 @@ Tests lock the rows below. Nothing in this repository is a theorem. Nothing here
 |---|---|
 | missing `fin` is refused | **verified** by tests on this rail |
 | past or today `fin` at write is refused | **verified** |
+| `lire` of an expired card succeeds | **verified** |
+| `juger` expired / named UTC day is deny + not fake | **verified** |
 | `majeur` false is refused | **verified** |
 | `lire` refuses `majeur ≠ true` | **verified** |
 | unknown usage is refused | **verified** |
@@ -90,7 +95,7 @@ Tests lock the rows below. Nothing in this repository is a theorem. Nothing here
 See [INTERDIT.md](INTERDIT.md). In short:
 
 - figure d'un mineur
-- `fin` manquante, passée, ou aujourd'hui (UTC)
+- `fin` manquante à l'écriture ; passée ou aujourd'hui (UTC) à l'écriture
 - usage `mandat` sans date de fin
 - usage inconnu, nom vide
 - fichier voix / visage / pièce d'identité dans Git
@@ -100,6 +105,8 @@ See [INTERDIT.md](INTERDIT.md). In short:
 - un sceau QUANTUM
 - frapper `quantique` sur cette rail
 - collapser MODE depuis FIGURE
+
+Une `fin` expirée n'est pas une personne fausse. `juger` deny : servitude ended. Person is not fake. Speak of, not as.
 
 Parler *de* quelqu'un reste libre. Parler *comme* quelqu'un exige une figure.
 

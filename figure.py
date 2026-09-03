@@ -66,7 +66,7 @@ def ecrire(nom_public, usages, fin, debut=None, juridiction="QC", langue="fr-CA"
     }
 
 
-def _garde(carte: dict) -> None:
+def _garde(carte: dict) -> date:
     if carte.get("format") != FORMAT:
         raise SystemExit("pas une carte figure.v0")
     if carte.get("majeur") is not True:
@@ -81,11 +81,9 @@ def _garde(carte: dict) -> None:
             raise SystemExit("refus : mandat sans fin")
         raise SystemExit("carte refusée : pas de fin")
     try:
-        jour_fin = _parse_jour(carte["fin"])
+        return _parse_jour(carte["fin"])
     except (TypeError, ValueError):
         raise SystemExit("fin illisible") from None
-    if jour_fin <= _aujourd_hui():
-        raise SystemExit("carte expirée")
 
 
 def lire(chemin: str) -> dict:
@@ -94,8 +92,18 @@ def lire(chemin: str) -> dict:
     return carte
 
 
-def juger(carte: dict) -> dict:
-    _garde(carte)
+def juger(carte: dict, aujourd: date | None = None) -> dict:
+    jour_fin = _garde(carte)
+    here = aujourd or _aujourd_hui()
+    if jour_fin <= here:
+        return {
+            "decision": "deny",
+            "flag": "figure",
+            "nom_public": carte.get("nom_public"),
+            "usages": carte.get("usages"),
+            "fin": carte.get("fin"),
+            "note": "servitude ended. Person is not fake. Speak of, not as.",
+        }
     return {
         "decision": "allow",
         "flag": "figure",
