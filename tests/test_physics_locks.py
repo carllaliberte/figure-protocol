@@ -119,12 +119,67 @@ class PastOrTodayFinIsRefused(unittest.TestCase):
         self.assertNotEqual(proc.returncode, 0)
         self.assertIn("aujourd", (proc.stderr + proc.stdout).lower())
 
-    def test_lire_expired_fin_is_refused(self):
+
+class ExpireIsJudgeDecisionNotParseError(unittest.TestCase):
+    DENY_NOTE = "servitude ended. Person is not fake. Speak of, not as."
+
+    def test_lire_expired_card_succeeds(self):
         with tempfile.TemporaryDirectory() as tmp:
             p = Path(tmp) / "expiree.figure.json"
             p.write_text(_dump(_carte(fin="2020-01-01")), encoding="utf-8")
-            msg = _refus(figure.lire, str(p))
-            self.assertIn("expir", msg.lower())
+            carte = figure.lire(str(p))
+            self.assertEqual(carte["format"], "figure.v0")
+            self.assertEqual(carte["fin"], "2020-01-01")
+            self.assertIs(carte["majeur"], True)
+
+    def test_cli_lire_expired_exits_zero(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "expiree.figure.json"
+            p.write_text(_dump(_carte(fin="2020-01-01")), encoding="utf-8")
+            proc = _cli(["lire", str(p)])
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            out = json.loads(proc.stdout)
+            self.assertEqual(out["format"], "figure.v0")
+            self.assertEqual(out["fin"], "2020-01-01")
+            self.assertNotIn("carte expirée", proc.stderr)
+            self.assertNotIn("carte expirée", proc.stdout)
+
+    def test_juger_expired_is_deny_and_not_fake(self):
+        jugement = figure.juger(_carte(fin="2020-01-01"))
+        self.assertEqual(jugement["decision"], "deny")
+        self.assertEqual(jugement["flag"], "figure")
+        self.assertEqual(jugement["fin"], "2020-01-01")
+        self.assertIn(self.DENY_NOTE, jugement["note"])
+        self.assertNotIn("quantique", jugement["note"].lower())
+        self.assertNotIn("file is fake", jugement["note"].lower())
+        self.assertNotIn("the person is fake", jugement["note"].lower())
+        self.assertNotIn("fichier est faux", jugement["note"].lower())
+
+    def test_juger_named_utc_day_is_deny(self):
+        today = datetime.now(timezone.utc).date()
+        jugement = figure.juger(_carte(fin=today.isoformat()), aujourd=today)
+        self.assertEqual(jugement["decision"], "deny")
+        self.assertIn(self.DENY_NOTE, jugement["note"])
+
+    def test_cli_juger_expired_exits_zero_with_deny_json(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "expiree.figure.json"
+            p.write_text(_dump(_carte(fin="2020-01-01")), encoding="utf-8")
+            proc = _cli(["juger", str(p)])
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            out = json.loads(proc.stdout)
+            self.assertEqual(out["decision"], "deny")
+            self.assertIn(self.DENY_NOTE, out["note"])
+            self.assertNotIn("QUANTUM", proc.stdout)
+            self.assertNotIn("Imagine", proc.stdout)
+            self.assertNotIn("quantique", proc.stdout)
+
+    def test_juger_deny_json_is_not_a_quantum_seal(self):
+        dumped = _dump(figure.juger(_carte(fin="2020-01-01")))
+        self.assertEqual(json.loads(dumped)["decision"], "deny")
+        self.assertNotIn("QUANTUM", dumped)
+        self.assertNotIn("quantique", dumped)
+        self.assertNotIn("Imagine", dumped)
 
 
 class MajeurFalseIsRefused(unittest.TestCase):
@@ -421,6 +476,11 @@ class ReadmeDoorCopy(unittest.TestCase):
         text = (ROOT / "README.md").read_text(encoding="utf-8")
         self.assertIn("UTC", text)
         self.assertIn("calendar day", text)
+
+    def test_readme_names_expire_deny_is_not_fake(self):
+        text = (ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertIn("servitude ended. Person is not fake. Speak of, not as.", text)
+        self.assertIn("Expire is a judge decision", text)
 
     def test_readme_names_minor_and_biometric_locks(self):
         text = (ROOT / "README.md").read_text(encoding="utf-8")
