@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""FIGURE v0 — écrire / lire une carte. Pas de mineur. Pas de fichier biométrique."""
+"""FIGURE v0 — écrire / lire / juger une carte. Pas de mineur. Pas de fichier biométrique."""
 
 from __future__ import annotations
 
@@ -22,20 +22,28 @@ def _parse_jour(s: str) -> date:
     return date.fromisoformat(s)
 
 
+def _exiger_fin(fin, usages=()) -> date:
+    if fin is None or not str(fin).strip():
+        if "mandat" in (usages or ()):
+            raise SystemExit("refus : mandat sans fin")
+        raise SystemExit("refus : fin manquante")
+    try:
+        return _parse_jour(str(fin).strip())
+    except ValueError:
+        raise SystemExit("fin : YYYY-MM-DD") from None
+
+
 def ecrire(nom_public, usages, fin, debut=None, juridiction="QC", langue="fr-CA", majeur=True, temoin_id=None, transcript_sha256=None):
     if not majeur:
         raise SystemExit("refus : figure d'un mineur")
-    if not nom_public.strip():
+    if not nom_public or not nom_public.strip():
         raise SystemExit("nom-public requis")
     mauvais = [u for u in usages if u not in USAGES]
     if mauvais:
         raise SystemExit("usages : nom | voix | visage | mandat")
     if not usages:
         raise SystemExit("au moins un usage")
-    try:
-        jour_fin = _parse_jour(fin)
-    except ValueError:
-        raise SystemExit("fin : YYYY-MM-DD") from None
+    jour_fin = _exiger_fin(fin, usages)
     if jour_fin <= _aujourd_hui():
         raise SystemExit("fin doit être après aujourd'hui")
     jour_debut = _parse_jour(debut) if debut else _aujourd_hui()
@@ -54,28 +62,48 @@ def ecrire(nom_public, usages, fin, debut=None, juridiction="QC", langue="fr-CA"
         "debut": jour_debut.isoformat(),
         "fin": jour_fin.isoformat(),
         "revocable": True,
-        "note": "v0 non signée. QUANTUM signe plus tard. Hash seulement dans Git.",
+        "note": "v0 non signée. Hash seulement dans Git.",
     }
 
 
-def lire(chemin: str) -> dict:
-    carte = json.loads(Path(chemin).expanduser().read_text(encoding="utf-8"))
+def _garde(carte: dict) -> None:
     if carte.get("format") != FORMAT:
         raise SystemExit("pas une carte figure.v0")
     if carte.get("majeur") is not True:
         raise SystemExit("carte refusée : majeur ≠ true")
-    if not carte.get("fin"):
-        raise SystemExit("carte refusée : pas de fin")
     if not carte.get("usages"):
         raise SystemExit("carte refusée : pas d'usage")
+    mauvais = [u for u in carte["usages"] if u not in USAGES]
+    if mauvais:
+        raise SystemExit("usages : nom | voix | visage | mandat")
+    if not carte.get("fin"):
+        if "mandat" in carte["usages"]:
+            raise SystemExit("refus : mandat sans fin")
+        raise SystemExit("carte refusée : pas de fin")
     try:
-        if _parse_jour(carte["fin"]) <= _aujourd_hui():
-            raise SystemExit("carte expirée")
-    except ValueError as e:
-        if "expirée" in str(e):
-            raise
+        jour_fin = _parse_jour(carte["fin"])
+    except (TypeError, ValueError):
         raise SystemExit("fin illisible") from None
+    if jour_fin <= _aujourd_hui():
+        raise SystemExit("carte expirée")
+
+
+def lire(chemin: str) -> dict:
+    carte = json.loads(Path(chemin).expanduser().read_text(encoding="utf-8"))
+    _garde(carte)
     return carte
+
+
+def juger(carte: dict) -> dict:
+    _garde(carte)
+    return {
+        "decision": "allow",
+        "flag": "figure",
+        "nom_public": carte.get("nom_public"),
+        "usages": carte.get("usages"),
+        "fin": carte.get("fin"),
+        "note": "figure active. parler comme X. cette rail nomme qui.",
+    }
 
 
 def main(argv=None) -> int:
@@ -93,6 +121,8 @@ def main(argv=None) -> int:
     pe.add_argument("--vers", default="carte.figure.json")
     pl = sub.add_parser("lire")
     pl.add_argument("fichier")
+    pj = sub.add_parser("juger")
+    pj.add_argument("fichier")
     args = p.parse_args(argv)
     if args.cmd == "ecrire":
         usages = [u.strip() for u in args.usages.split(",") if u.strip()]
@@ -100,8 +130,10 @@ def main(argv=None) -> int:
         Path(args.vers).write_text(json.dumps(carte, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         out = dict(carte); out["fichier"] = args.vers
         print(json.dumps(out, ensure_ascii=False, indent=2))
-    else:
+    elif args.cmd == "lire":
         print(json.dumps(lire(args.fichier), ensure_ascii=False, indent=2))
+    else:
+        print(json.dumps(juger(lire(args.fichier)), ensure_ascii=False, indent=2))
     return 0
 
 
