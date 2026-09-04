@@ -37,7 +37,7 @@ Quatre usages, séparés. Ce rail ne les collapse pas.
 - Quatre usages, tenus séparés : `nom` | `voix` | `visage` | `mandat`.
 - `fin` manquante (`YYYY-MM-DD`) : refus. Passée ou aujourd'hui à l'écriture : refus. La date est un jour calendaire UTC. Le jour nommé est déjà trop tard.
 - L'expiration est une décision du juge, pas une erreur de parse. `lire` d'une carte expirée réussit — c'est encore une carte figure.v0.
-- `juger` deny quand `fin` est aujourd'hui ou passée : servitude terminée. La personne n'est pas fausse. Parler de, jamais comme.
+- `juger` deny quand `fin` est aujourd'hui ou passée : servitude terminée. La personne n'est pas fausse. Parler de, jamais comme. L'agent se tait. Pack = tag BCP 47 de la carte. Pas un second slug.
 - Mineur : refus. `majeur` doit être true. `lire` refuse `majeur ≠ true`. Jamais écrire une figure mineure.
 - Usage `mandat` sans date de fin : refus.
 - Jamais un fichier biométrique (voix / visage / pièce d'identité) dans Git — hash seulement. `identite_sha256` reste null dans les exemples v0.
@@ -53,6 +53,7 @@ Jugement = Carl : `python3 figure.py ecrire|lire|juger`.
 python3 figure.py ecrire --nom-public "Alex Moreau" --usages nom,voix --fin 2027-08-31
 python3 figure.py lire examples/fictive-adulte.figure.json
 python3 figure.py juger examples/fictive-adulte.figure.json
+python3 figure.py juger examples/expiree-silence.figure.json
 ```
 
 Sans date de fin : refus. Mineur : refus. Fichier biométrique dans Git : refus.
@@ -133,5 +134,6 @@ MIT (protocoles) · Apache-2.0 (œil UNFORGE). QUANTUM signe **plus tard**. Les 
 - [`schema/figure.v0.json`](schema/figure.v0.json)
 - [`figure.py`](figure.py) — `python3 figure.py ecrire` / `lire` / `juger`
 - [`examples/fictive-adulte.figure.json`](examples/fictive-adulte.figure.json) — adulte fictif, hash null
+- [`examples/expiree-silence.figure.json`](examples/expiree-silence.figure.json) — expirée, l'agent se tait
 - [`tests/test_physics_locks.py`](tests/test_physics_locks.py) — verrous physiques
 - [`.github/workflows/physics.yml`](.github/workflows/physics.yml) — CI des tests
