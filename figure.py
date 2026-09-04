@@ -12,6 +12,8 @@ from pathlib import Path
 
 USAGES = ("nom", "voix", "visage", "mandat")
 FORMAT = "figure.v0"
+SILENCE_EN = "licence expired. the agent stays silent."
+PACKS = ("fr-CA", "en", "en-CA", "es-MX", "en-NG")
 
 
 def _aujourd_hui() -> date:
@@ -31,6 +33,15 @@ def _exiger_fin(fin, usages=()) -> date:
         return _parse_jour(str(fin).strip())
     except ValueError:
         raise SystemExit("fin : YYYY-MM-DD") from None
+
+
+def _pack(carte: dict) -> str:
+    tag = str(carte.get("langue") or "fr-CA").strip() or "fr-CA"
+    if tag == "en-CA":
+        return "en"
+    if tag not in PACKS:
+        return "fr-CA"
+    return tag
 
 
 def ecrire(nom_public, usages, fin, debut=None, juridiction="QC", langue="fr-CA", majeur=True, temoin_id=None, transcript_sha256=None):
@@ -102,6 +113,9 @@ def juger(carte: dict, aujourd: date | None = None) -> dict:
             "nom_public": carte.get("nom_public"),
             "usages": carte.get("usages"),
             "fin": carte.get("fin"),
+            "pack": _pack(carte),
+            "silence": True,
+            "spoken": SILENCE_EN,
             "note": "servitude ended. Person is not fake. Speak of, not as.",
         }
     return {
@@ -110,6 +124,8 @@ def juger(carte: dict, aujourd: date | None = None) -> dict:
         "nom_public": carte.get("nom_public"),
         "usages": carte.get("usages"),
         "fin": carte.get("fin"),
+        "pack": _pack(carte),
+        "silence": False,
         "note": "figure active. parler comme X. cette rail nomme qui.",
     }
 

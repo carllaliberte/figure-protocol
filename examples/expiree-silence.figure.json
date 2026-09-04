@@ -1,0 +1,15 @@
+{
+  "format": "figure.v0",
+  "figure_id": "FG-expiree-001",
+  "nom_public": "Alex Moreau",
+  "majeur": true,
+  "juridiction": "QC",
+  "langue": "fr-CA",
+  "usages": ["nom", "voix"],
+  "interdits": ["mineur", "mandat sans fin", "fichier biométrique dans Git"],
+  "identite_sha256": null,
+  "debut": "2025-01-01",
+  "fin": "2026-01-01",
+  "revocable": true,
+  "note": "Personne fictive. Carte expirée. Exemple public seulement."
+}
