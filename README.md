@@ -2,9 +2,9 @@
 
 **Une servitude pour une personne.**
 
-FIGURE est un registre de droits sur un nom, une voix, un visage ou un mandat : un agent n'emprunte X **que** s'il existe une figure active. This rail names who. It does not collapse MODE. This rail does not mint `quantique`.
+FIGURE est un registre de droits sur un nom, une voix, un visage ou un mandat : un agent n'emprunte X **que** s'il existe une figure active. Cette rail nomme qui. Elle ne collapse pas MODE. Cette rail ne frappe pas `quantique`.
 
-This repository is version 0. Phone + Python. MIT. See [INTERDIT.md](INTERDIT.md).
+Ce dépôt est la version 0. Téléphone + Python. MIT. Voir [INTERDIT.md](INTERDIT.md).
 
 Ce n'est pas SITUS (un lieu n'a pas de gorge).
 Ce n'est pas UNFORGE (un fichier n'est pas une personne).
@@ -13,7 +13,7 @@ Ce n'est pas TÉMOIN (la force d'un aléa n'est pas un nom).
 Ce n'est pas BRUIT (un canal n'est pas un consentement).
 Ce n'est pas HORIZON (une date de ressellage n'est pas une personne).
 Ce n'est pas un sceau QUANTUM.
-A public name is not consent. Do not invent consent because a name is public.
+Un nom public n'est pas un consentement. On n'invente pas le consentement parce que le nom est public.
 
 ## Primitive
 
@@ -22,7 +22,7 @@ figure active  →  parler comme X
 figure absente →  parler de X, jamais comme X
 ```
 
-Quatre usages, séparés. This rail does not collapse them.
+Quatre usages, séparés. Cette rail ne les collapse pas.
 
 | Code | Droit |
 |---|---|
@@ -31,23 +31,23 @@ Quatre usages, séparés. This rail does not collapse them.
 | `visage` | Image, deepfake, avatar |
 | `mandat` | Agir en son nom auprès d'un tiers |
 
-## Physics locks (this rail)
+## Verrous physiques (cette rail)
 
-- FIGURE is a servitude on a person: name, voice, face, or mandate. Active figure → speak as X. Absent figure → speak of X, never as X.
-- Four usages, kept separate: `nom` | `voix` | `visage` | `mandat`.
-- Missing `fin` (`YYYY-MM-DD`): refuse. Past or today at write: refuse. The date is a UTC calendar day. The named day is already too late.
-- Expire is a judge decision, not a parse error. `lire` of an expired card succeeds — it is still a figure.v0 card.
-- `juger` deny when `fin` is today or past: servitude ended. Person is not fake. Speak of, not as.
-- Minor: refuse. `majeur` must be true. `lire` refuses `majeur ≠ true`. Never write a minor figure.
-- Usage `mandat` without an end date: refuse.
-- Never put a biometric file (voice / face / ID) in Git — hash only. `identite_sha256` stays null in v0 examples.
-- JSON card is not a QUANTUM seal. QUANTUM signs later. Keys off Git.
-- `juger` names who. It does not collapse MODE. Do not mint `quantique`.
-- Not SITUS, UNFORGE, QUELLE, TÉMOIN, BRUIT, or HORIZON. No token, L1, voice-cloud, face marketplace, or legal opinion.
+- FIGURE est une servitude sur une personne : nom, voix, visage ou mandat. Figure active → parler comme X. Figure absente → parler de X, jamais comme X.
+- Quatre usages, tenus séparés : `nom` | `voix` | `visage` | `mandat`.
+- `fin` manquante (`YYYY-MM-DD`) : refus. Passée ou aujourd'hui à l'écriture : refus. La date est un jour calendaire UTC. Le jour nommé est déjà trop tard.
+- L'expiration est une décision du juge, pas une erreur de parse. `lire` d'une carte expirée réussit — c'est encore une carte figure.v0.
+- `juger` deny quand `fin` est aujourd'hui ou passée : servitude terminée. La personne n'est pas fausse. Parler de, jamais comme.
+- Mineur : refus. `majeur` doit être true. `lire` refuse `majeur ≠ true`. Jamais écrire une figure mineure.
+- Usage `mandat` sans date de fin : refus.
+- Jamais un fichier biométrique (voix / visage / pièce d'identité) dans Git — hash seulement. `identite_sha256` reste null dans les exemples v0.
+- La carte JSON n'est pas un sceau QUANTUM. QUANTUM signe plus tard. Les clés restent hors Git.
+- `juger` nomme qui. Elle ne collapse pas MODE. On ne frappe pas `quantique`.
+- Pas SITUS, UNFORGE, QUELLE, TÉMOIN, BRUIT, ni HORIZON. Pas de token, L1, cloud de voix, marketplace de visages, ni avis juridique.
 
-Judgment = Carl: `python3 figure.py ecrire|lire|juger`.
+Jugement = Carl : `python3 figure.py ecrire|lire|juger`.
 
-## How to run
+## Comment lancer
 
 ```bash
 python3 figure.py ecrire --nom-public "Alex Moreau" --usages nom,voix --fin 2027-08-31
@@ -56,43 +56,43 @@ python3 figure.py juger examples/fictive-adulte.figure.json
 ```
 
 Sans date de fin : refus. Mineur : refus. Fichier biométrique dans Git : refus.
-The calendar day is UTC. Named day already too late at write.
-A judge `deny` does not say the person is fake. It says: servitude ended. Person is not fake. Speak of, not as.
+Le jour calendaire est UTC. Le jour nommé est déjà trop tard à l'écriture.
+Un `deny` du juge ne dit pas que la personne est fausse. Il dit : servitude terminée. La personne n'est pas fausse. Parler de, jamais comme.
 
-Physics locks (stdlib, no extra packages):
+Verrous physiques (stdlib, sans paquet extra) :
 
 ```bash
 python3 -m unittest discover -s tests -v
 ```
 
-## Verified vs assumed
+## Vérifié vs assumé
 
-Tests lock the rows below. Nothing in this repository is a theorem. Nothing here is a QUANTUM seal. A merge is not a seal.
+Les tests verrouillent les lignes ci-dessous. Rien dans ce dépôt n'est un théorème. Rien ici n'est un sceau QUANTUM. Un merge n'est pas un sceau.
 
-| Claim | Status |
+| Affirmation | Statut |
 |---|---|
-| missing `fin` is refused | **verified** by tests on this rail |
-| past or today `fin` at write is refused | **verified** |
-| `lire` of an expired card succeeds | **verified** |
-| `juger` expired / named UTC day is deny + not fake | **verified** |
-| `majeur` false is refused | **verified** |
-| `lire` refuses `majeur ≠ true` | **verified** |
-| unknown usage is refused | **verified** |
-| empty name is refused | **verified** |
-| default `ecrire` is adult + future `fin` | **verified** |
-| `mandat` without an end date is refused | **verified** |
-| JSON card is not a QUANTUM seal | **verified** |
-| example stays adult fictive; `identite_sha256` is null | **verified** |
-| `juger` names who, not `quantique` | **verified** |
-| QUANTUM signature | **later** — keys off Git, not in this repo |
-| EasyCrypt / formal-layer | **not here** |
-| mint `quantique` / collapse MODE | **refused** |
-| minor figure / biometric file in Git | **refused** |
-| consent because a name is public | **refused** |
+| `fin` manquante est refusée | **vérifié** par les tests de cette rail |
+| `fin` passée ou aujourd'hui à l'écriture est refusée | **vérifié** |
+| `lire` d'une carte expirée réussit | **vérifié** |
+| `juger` expirée / jour UTC nommé est deny + pas fausse | **vérifié** |
+| `majeur` false est refusé | **vérifié** |
+| `lire` refuse `majeur ≠ true` | **vérifié** |
+| usage inconnu est refusé | **vérifié** |
+| nom vide est refusé | **vérifié** |
+| `ecrire` par défaut est adulte + `fin` future | **vérifié** |
+| `mandat` sans date de fin est refusé | **vérifié** |
+| la carte JSON n'est pas un sceau QUANTUM | **vérifié** |
+| l'exemple reste adulte fictif ; `identite_sha256` est null | **vérifié** |
+| `juger` nomme qui, pas `quantique` | **vérifié** |
+| signature QUANTUM | **plus tard** — clés hors Git, pas dans ce dépôt |
+| EasyCrypt / formal-layer | **pas ici** |
+| frapper `quantique` / collapser MODE | **refusé** |
+| figure mineure / fichier biométrique dans Git | **refusé** |
+| consentement parce que le nom est public | **refusé** |
 
-## What v0 refuses
+## Ce que v0 refuse
 
-See [INTERDIT.md](INTERDIT.md). In short:
+Voir [INTERDIT.md](INTERDIT.md). En bref :
 
 - figure d'un mineur
 - `fin` manquante à l'écriture ; passée ou aujourd'hui (UTC) à l'écriture
@@ -106,7 +106,7 @@ See [INTERDIT.md](INTERDIT.md). In short:
 - frapper `quantique` sur cette rail
 - collapser MODE depuis FIGURE
 
-Une `fin` expirée n'est pas une personne fausse. `juger` deny : servitude ended. Person is not fake. Speak of, not as.
+Une `fin` expirée n'est pas une personne fausse. `juger` deny : servitude terminée. La personne n'est pas fausse. Parler de, jamais comme.
 
 Parler *de* quelqu'un reste libre. Parler *comme* quelqu'un exige une figure.
 

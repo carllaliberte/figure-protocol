@@ -467,32 +467,53 @@ class ReadmeDoorCopy(unittest.TestCase):
         self.assertIn("python3 figure.py ecrire", text)
         self.assertIn("python3 figure.py lire", text)
         self.assertIn("python3 figure.py juger", text)
-        self.assertIn("Verified vs assumed", text)
-        self.assertIn("**verified**", text)
-        self.assertIn("**later**", text)
-        self.assertIn("How to run", text)
+        self.assertIn("Vérifié vs assumé", text)
+        self.assertIn("**vérifié**", text)
+        self.assertIn("**plus tard**", text)
+        self.assertIn("Comment lancer", text)
+        self.assertNotIn("Verified vs assumed", text)
+        self.assertNotIn("How to run", text)
 
     def test_readme_names_utc_calendar_day(self):
         text = (ROOT / "README.md").read_text(encoding="utf-8")
         self.assertIn("UTC", text)
-        self.assertIn("calendar day", text)
+        self.assertIn("jour calendaire", text)
+        self.assertNotIn("calendar day", text)
 
     def test_readme_names_expire_deny_is_not_fake(self):
         text = (ROOT / "README.md").read_text(encoding="utf-8")
-        self.assertIn("servitude ended. Person is not fake. Speak of, not as.", text)
-        self.assertIn("Expire is a judge decision", text)
+        self.assertIn("servitude terminée", text)
+        self.assertIn("La personne n'est pas fausse", text)
+        self.assertIn("Parler de, jamais comme", text)
+        self.assertIn("décision du juge", text)
+        self.assertNotIn("servitude ended. Person is not fake. Speak of, not as.", text)
+        self.assertNotIn("Expire is a judge decision", text)
 
     def test_readme_names_minor_and_biometric_locks(self):
         text = (ROOT / "README.md").read_text(encoding="utf-8")
         self.assertIn("majeur", text)
         self.assertIn("identite_sha256", text)
         self.assertIn("null", text)
-        self.assertIn("biometric", text.lower())
+        self.assertIn("biométrique", text)
 
     def test_readme_does_not_mint_quantique_or_collapse_mode(self):
         text = (ROOT / "README.md").read_text(encoding="utf-8")
-        self.assertIn("does not mint `quantique`", text)
-        self.assertIn("does not collapse MODE", text)
+        self.assertIn("ne frappe pas `quantique`", text)
+        self.assertIn("ne collapse pas MODE", text)
+        self.assertNotIn("does not mint `quantique`", text)
+        self.assertNotIn("does not collapse MODE", text)
+
+    def test_readme_door_is_french(self):
+        text = (ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertIn("On n'invente pas le consentement parce que le nom est public", text)
+        self.assertIn("parler comme X", text)
+        self.assertIn("parler de X, jamais comme X", text)
+        self.assertIn("Parler *de* quelqu'un reste libre", text)
+        self.assertNotIn("This rail names who", text)
+        self.assertNotIn("This repository is version 0", text)
+        self.assertNotIn("A public name is not consent", text)
+        self.assertNotIn("Physics locks (this rail)", text)
+        self.assertNotIn("What v0 refuses", text)
 
     def test_copy_on_this_rail_has_no_imagine_word(self):
         for rel in COPY_FILES:
