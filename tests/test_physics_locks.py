@@ -467,11 +467,12 @@ class ReadmeDoorCopy(unittest.TestCase):
         self.assertIn("python3 figure.py ecrire", text)
         self.assertIn("python3 figure.py lire", text)
         self.assertIn("python3 figure.py juger", text)
-        self.assertIn("Vérifié vs assumé", text)
+        self.assertIn("Vérifié vs présumé", text)
         self.assertIn("**vérifié**", text)
         self.assertIn("**plus tard**", text)
         self.assertIn("Comment lancer", text)
         self.assertNotIn("Verified vs assumed", text)
+        self.assertNotIn("Vérifié vs assumé", text)
         self.assertNotIn("How to run", text)
 
     def test_readme_names_utc_calendar_day(self):
@@ -509,6 +510,9 @@ class ReadmeDoorCopy(unittest.TestCase):
         self.assertIn("parler comme X", text)
         self.assertIn("parler de X, jamais comme X", text)
         self.assertIn("Parler *de* quelqu'un reste libre", text)
+        self.assertIn("Ce rail nomme qui", text)
+        self.assertNotIn("Cette rail", text)
+        self.assertNotIn("cette rail", text)
         self.assertNotIn("This rail names who", text)
         self.assertNotIn("This repository is version 0", text)
         self.assertNotIn("A public name is not consent", text)

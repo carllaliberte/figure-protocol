@@ -2,7 +2,7 @@
 
 **Une servitude pour une personne.**
 
-FIGURE est un registre de droits sur un nom, une voix, un visage ou un mandat : un agent n'emprunte X **que** s'il existe une figure active. Cette rail nomme qui. Elle ne collapse pas MODE. Cette rail ne frappe pas `quantique`.
+FIGURE est un registre de droits sur un nom, une voix, un visage ou un mandat : un agent n'emprunte X **que** s'il existe une figure active. Ce rail nomme qui. Il ne collapse pas MODE. Ce rail ne frappe pas `quantique`.
 
 Ce dépôt est la version 0. Téléphone + Python. MIT. Voir [INTERDIT.md](INTERDIT.md).
 
@@ -22,7 +22,7 @@ figure active  →  parler comme X
 figure absente →  parler de X, jamais comme X
 ```
 
-Quatre usages, séparés. Cette rail ne les collapse pas.
+Quatre usages, séparés. Ce rail ne les collapse pas.
 
 | Code | Droit |
 |---|---|
@@ -31,7 +31,7 @@ Quatre usages, séparés. Cette rail ne les collapse pas.
 | `visage` | Image, deepfake, avatar |
 | `mandat` | Agir en son nom auprès d'un tiers |
 
-## Verrous physiques (cette rail)
+## Verrous physiques (ce rail)
 
 - FIGURE est une servitude sur une personne : nom, voix, visage ou mandat. Figure active → parler comme X. Figure absente → parler de X, jamais comme X.
 - Quatre usages, tenus séparés : `nom` | `voix` | `visage` | `mandat`.
@@ -42,7 +42,7 @@ Quatre usages, séparés. Cette rail ne les collapse pas.
 - Usage `mandat` sans date de fin : refus.
 - Jamais un fichier biométrique (voix / visage / pièce d'identité) dans Git — hash seulement. `identite_sha256` reste null dans les exemples v0.
 - La carte JSON n'est pas un sceau QUANTUM. QUANTUM signe plus tard. Les clés restent hors Git.
-- `juger` nomme qui. Elle ne collapse pas MODE. On ne frappe pas `quantique`.
+- `juger` nomme qui. Il ne collapse pas MODE. On ne frappe pas `quantique`.
 - Pas SITUS, UNFORGE, QUELLE, TÉMOIN, BRUIT, ni HORIZON. Pas de token, L1, cloud de voix, marketplace de visages, ni avis juridique.
 
 Jugement = Carl : `python3 figure.py ecrire|lire|juger`.
@@ -65,13 +65,13 @@ Verrous physiques (stdlib, sans paquet extra) :
 python3 -m unittest discover -s tests -v
 ```
 
-## Vérifié vs assumé
+## Vérifié vs présumé
 
 Les tests verrouillent les lignes ci-dessous. Rien dans ce dépôt n'est un théorème. Rien ici n'est un sceau QUANTUM. Un merge n'est pas un sceau.
 
 | Affirmation | Statut |
 |---|---|
-| `fin` manquante est refusée | **vérifié** par les tests de cette rail |
+| `fin` manquante est refusée | **vérifié** par les tests de ce rail |
 | `fin` passée ou aujourd'hui à l'écriture est refusée | **vérifié** |
 | `lire` d'une carte expirée réussit | **vérifié** |
 | `juger` expirée / jour UTC nommé est deny + pas fausse | **vérifié** |
@@ -103,7 +103,7 @@ Voir [INTERDIT.md](INTERDIT.md). En bref :
 - un token, un L1, un cloud de voix, un marketplace de visages
 - un avis juridique
 - un sceau QUANTUM
-- frapper `quantique` sur cette rail
+- frapper `quantique` sur ce rail
 - collapser MODE depuis FIGURE
 
 Une `fin` expirée n'est pas une personne fausse. `juger` deny : servitude terminée. La personne n'est pas fausse. Parler de, jamais comme.
@@ -129,7 +129,7 @@ MIT (protocoles) · Apache-2.0 (œil UNFORGE). QUANTUM signe **plus tard**. Les 
 ## Fichiers
 
 - [`INTERDIT.md`](INTERDIT.md) — ce qu'on ne prétend pas
-- [`JUGE.md`](JUGE.md) — cette rail nomme qui, ne frappe pas `quantique`
+- [`JUGE.md`](JUGE.md) — ce rail nomme qui, ne frappe pas `quantique`
 - [`schema/figure.v0.json`](schema/figure.v0.json)
 - [`figure.py`](figure.py) — `python3 figure.py ecrire` / `lire` / `juger`
 - [`examples/fictive-adulte.figure.json`](examples/fictive-adulte.figure.json) — adulte fictif, hash null
